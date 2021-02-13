@@ -4,7 +4,7 @@ import PostsData from "./PostsData";
 class Posts extends Component {
     constructor(props) {
         super(props);
-        this.state = { posts: PostsData };
+        this.state = { posts: PostsData, img: null };
     }
 
     addPost = (e) => {
@@ -21,7 +21,7 @@ class Posts extends Component {
         // Description input
         let description = document.forms["add"]["description"].value;
 
-        console.log("ALL VALUES", name, address, description);
+        // console.log("ALL VALUES", name, address, description);
 
         // Arr Copy to be joined with main state
         let arrCopy = this.state.posts;
@@ -29,12 +29,9 @@ class Posts extends Component {
         arrCopy.unshift({
             name: name,
             description: description,
-            photo:
-                "https://nmgprod.s3.amazonaws.com/media/files/60/48/6048b1e4d0b20d40eea243534785ed3f/cover_image_1582904889.jpg.760x400_q85_crop_upscale.jpg",
+            photo: this.state.img,
             link: `https://www.google.com/maps/place/${address}`,
         });
-
-        console.log("Array copy", arrCopy);
 
         this.setState({
             posts: arrCopy,
@@ -43,6 +40,14 @@ class Posts extends Component {
         document.forms["add"]["name"].value = "";
         address = document.forms["add"]["address"].value = "";
         document.forms["add"]["description"].value = "";
+        document.forms["add"]["img"].value = "";
+    };
+
+    // Sets image state to value of input field.
+    onImgChange = (event) => {
+        this.setState({
+            img: URL.createObjectURL(event.target.files[0]),
+        });
     };
 
     render() {
@@ -83,6 +88,15 @@ class Posts extends Component {
                                     rows="3"
                                     placeholder="Add Description Here"
                                 ></textarea>
+                                <label htmlFor="img">Select image:</label>
+                                <br />
+                                <input
+                                    type="file"
+                                    id="img"
+                                    name="img"
+                                    accept="image/*"
+                                    onChange={this.onImgChange}
+                                />
                             </div>
                         </div>
 
